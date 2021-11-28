@@ -6,5 +6,10 @@ import (
 )
 
 func MapURL(server *server.Server) {
-	server.AddRoute("/home",server.BasicAuth(controller.Home) )
+
+	server.AddAuthRoute("/", controller.Home)
+	server.AddRoute("/login", controller.Login)
+	server.AddRoute("/logout", controller.Logout)
+
+	server.AddRoute("/accessRefused", controller.AccessRefused)
 }
