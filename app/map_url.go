@@ -11,5 +11,6 @@ func MapURL(server *server.Server) {
 	server.AddRoute("/login", controller.Login)
 	server.AddRoute("/logout", controller.Logout)
 
+	server.AddRoute("/notFound", controller.NotFound)
 	server.AddRoute("/accessRefused", controller.AccessRefused)
 }
