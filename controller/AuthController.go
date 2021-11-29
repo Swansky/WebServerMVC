@@ -19,7 +19,7 @@ type LoginViewData struct {
 func Login(w http.ResponseWriter, r *http.Request) {
 	server := server2.GetInstance()
 	if server.UserIsAuthenticate(r) {
-		http.RedirectHandler("/", 302)
+		http.RedirectHandler("/", 302).ServeHTTP(w, r)
 		return
 	}
 
