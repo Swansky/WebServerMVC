@@ -1,21 +1,29 @@
 package models
 
+import (
+	"container/list"
+)
+
 type User struct {
-	username string
-	password [32]byte
+	Id       string
+	Username string
+	Password string
 }
 
-func NewUser(username string, password [32]byte) *User {
+type UserRepository interface {
+	Read() (*list.List, error)
+	Create(user *User) (*User, error)
+	Update(user *User) error
+	Delete(user *User) error
+}
+
+func NewUser(username string, password string) *User {
 	user := new(User)
-	user.username = username
-	user.password = password
+	user.Username = username
+	user.Password = password
 	return user
 }
 
-func (u User) GetUserName() string {
-	return u.username
-}
-
-func (u User) GetPassword() [32]byte {
-	return u.password
+func (u User) String() string {
+	return u.Id + ", " + u.Username + " " + u.Password
 }

@@ -5,8 +5,8 @@ import (
 	"awesomeProject1/repositories"
 	server2 "awesomeProject1/server"
 	"awesomeProject1/view"
-	"crypto/sha256"
-	"crypto/subtle"
+	"crypto/md5"
+	"encoding/hex"
 	uuid "github.com/nu7hatch/gouuid"
 	"net/http"
 	"time"
@@ -44,7 +44,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 				value := e.Value
 				user := value.(*models.User)
 				passwordValue := checkPassword(password, user)
-				if user.GetUserName() == username && passwordValue {
+				if user.Username == username && passwordValue {
 					v4, err := uuid.NewV4()
 					if err != nil {
 						panic(err)
@@ -60,7 +60,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 						MaxAge: 30000000,
 					}
 					http.SetCookie(w, cookie)
-					println("redirect ! ")
 					http.RedirectHandler("/", 302).ServeHTTP(w, r)
 					return
 				} else {
@@ -92,9 +91,8 @@ func Logout(w http.ResponseWriter, request *http.Request) {
 }
 
 func checkPassword(password string, user *models.User) bool {
-	passwordHash := sha256.Sum256([]byte(password))
-	actualPasswordHash := user.GetPassword()
-	passwordMatch := subtle.ConstantTimeCompare(passwordHash[:], actualPasswordHash[:]) == 1
+	passwordHash := md5.Sum([]byte(password))
+	passwordMatch := hex.EncodeToString(passwordHash[:]) == user.Password
 	if passwordMatch {
 		return true
 	}

@@ -1,0 +1,7 @@
+# Database credentials
+database:
+  host: "localhost"
+  username: "root"
+  password: "example"
+  databaseName: "swansBlog"
+  port: 3306
