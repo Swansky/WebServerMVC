@@ -11,7 +11,6 @@ func LoadView(w io.Writer, templateName string, data interface{}) {
 		panic(err)
 		return
 	}
-
 	err = files.Execute(w, data)
 	if err != nil {
 		panic(err)

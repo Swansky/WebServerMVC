@@ -54,18 +54,24 @@ func (u *UserRepository) Create(user *models.User) (*models.User, error) {
 	hash := md5.Sum([]byte(user.Password))
 
 	user.Password = hex.EncodeToString(hash[:])
-	exec, err := connection.Exec("INSERT INTO author(id,username,password) VALUES(?,?,?)", v4.String(), user.Username, user.Password)
+	_, err = connection.Exec("INSERT INTO author(id,username,password) VALUES(?,?,?)", v4.String(), user.Username, user.Password)
 	if err != nil {
 		return nil, err
 	}
-	println(exec)
 
 	user.Id = v4.String()
 	return user, nil
 }
 
 func (u *UserRepository) Update(user *models.User) error {
-	panic("implement me")
+	connection := u.databaseManager.CreateConnection()
+	defer connection.Close()
+
+	_, err := connection.Exec("UPDATE author SET username=?, password=? WHERE id=?", user.Username, user.Password, user.Id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (u *UserRepository) Delete(user *models.User) error {

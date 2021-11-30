@@ -103,7 +103,7 @@ func (s *Server) Start() {
 	fileServer := http.FileServer(http.Dir("./public"))
 	s.mux.Handle("/public/", http.StripPrefix("/public/", fileServer))
 	stringPort := fmt.Sprintf(":%d", s.port)
-	fmt.Printf(fmt.Sprintf("Starting server at port %s \n", stringPort))
+	fmt.Printf(fmt.Sprintf("Web server at:  http://localhost:%d/ \n", s.port))
 	if err := http.ListenAndServe(stringPort, s.mux); err != nil {
 		log.Fatal(err)
 	}
@@ -118,4 +118,18 @@ func (s *Server) LogoutUser(request *http.Request) {
 	if cookie != nil {
 		s.RemoveUserLog(cookie.Value)
 	}
+}
+
+func (s *Server) GetActiveUser(r *http.Request) (*models.User, error) {
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		return nil, err
+	}
+	for index, user := range s.userLog {
+		if index == cookie.Value {
+			return user, nil
+		}
+	}
+
+	return nil, nil
 }
