@@ -1,4 +1,4 @@
-package app
+package mapping
 
 import (
 	"awesomeProject1/controller"
@@ -6,7 +6,6 @@ import (
 )
 
 func MapURL(server *server.Server) {
-
 	server.AddAuthRoute("/", controller.Home)
 	server.AddRoute("/login", controller.Login)
 	server.AddRoute("/logout", controller.Logout)

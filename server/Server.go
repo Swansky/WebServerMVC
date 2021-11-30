@@ -10,6 +10,7 @@ import (
 type Server struct {
 	port    int
 	userLog map[string]*models.User
+	mux     *http.ServeMux
 }
 
 var instance *Server
@@ -19,6 +20,7 @@ func NewServer(port int) *Server {
 	server.port = port
 	server.userLog = make(map[string]*models.User)
 	instance = server
+	server.mux = http.NewServeMux()
 	return server
 }
 
@@ -38,9 +40,8 @@ func (s *Server) RemoveUserLog(uuid string) {
 	delete(s.userLog, uuid)
 }
 
-func (s Server) AddRoute(route string, handler func(http.ResponseWriter, *http.Request)) {
-
-	http.HandleFunc(route, s.addRouteChecker(route, handler))
+func (s *Server) AddRoute(route string, handler func(http.ResponseWriter, *http.Request)) {
+	s.mux.HandleFunc(route, s.addRouteChecker(route, handler))
 }
 
 func (s Server) AddAuthRoute(route string, handler func(http.ResponseWriter, *http.Request)) {
@@ -98,12 +99,12 @@ func (s *Server) getUserLog() map[string]*models.User {
 	return s.userLog
 }
 
-func (s Server) Start() {
+func (s *Server) Start() {
 	fileServer := http.FileServer(http.Dir("./public"))
-	http.Handle("/public", fileServer)
+	s.mux.Handle("/public/", http.StripPrefix("/public/", fileServer))
 	stringPort := fmt.Sprintf(":%d", s.port)
 	fmt.Printf(fmt.Sprintf("Starting server at port %s \n", stringPort))
-	if err := http.ListenAndServe(stringPort, nil); err != nil {
+	if err := http.ListenAndServe(stringPort, s.mux); err != nil {
 		log.Fatal(err)
 	}
 }
