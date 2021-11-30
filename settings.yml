@@ -1,4 +1,7 @@
 # Database credentials
+server:
+  port: 9999
+
 database:
   host: "localhost"
   username: "root"

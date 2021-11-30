@@ -9,6 +9,7 @@ import (
 
 func Start() {
 	config.LoadSettings()
+	settings := config.GetSettings()
 	repositories.NewRepositoryManager()
 	/*  repository := repositories.GetUserRepository()
 	user, err := repository.Create(models.NewUser("swansky", "test"))
@@ -18,7 +19,7 @@ func Start() {
 	}
 	println(user.String())*/
 
-	server := server2.NewServer(1293)
+	server := server2.NewServer(settings.Server.Port)
 	mapping.MapURL(server)
 	server.Start()
 }

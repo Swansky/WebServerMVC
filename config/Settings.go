@@ -6,6 +6,9 @@ import (
 )
 
 type Settings struct {
+	Server struct {
+		Port int `yaml:"port"`
+	} `yaml:"server"`
 	Database struct {
 		Host         string `yaml:"host"`
 		Username     string `yaml:"username"`
