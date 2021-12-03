@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>{{.Title}}</title>
+    {{ template "globalCss"}}
 </head>
 <body>
-
-<h1>{{.Title}} <a href="/logout">Logout</a> <a href="/profile">Profile</a></h1>
-
+{{template "menu"}}
+<h1>{{.Title}}</h1>
 <img src="public/images/nice-job-nice.jpg">
 </body>
 </html>

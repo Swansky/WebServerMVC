@@ -86,6 +86,26 @@ func (u *UserRepository) Delete(user *models.User) error {
 	return nil
 }
 
+func (u *UserRepository) FindById(uuid string) (*models.User, error) {
+	connection := u.databaseManager.CreateConnection()
+	defer connection.Close()
+
+	query, err := connection.Query("SELECT id,username,password FROM author WHERE id=?", uuid)
+	defer query.Close()
+	if err != nil {
+		return nil, err
+	}
+	for query.Next() {
+		var user models.User
+		err := query.Scan(&user.Id, &user.Username, &user.Password)
+		if err != nil {
+			return nil, err
+		}
+		return &user, nil
+	}
+	return nil, nil
+}
+
 func GetUserRepository() *UserRepository {
 	return instance
 }
